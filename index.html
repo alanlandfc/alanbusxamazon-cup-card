@@ -95,7 +95,7 @@ dialog::backdrop{background:#0008}
 <div class="act"><button class="dl" id="dl">ดาวน์โหลดการ์ด PNG</button><button class="rs" id="wallBtn" style="border-color:var(--g)" hidden>ส่งการ์ดขึ้นกำแพง</button><p class="hint" id="wallMsg" hidden>การ์ดและชื่อผู้ส่งจะแสดงบนกำแพงที่ทุกคนดูได้</p><button class="rs" id="rs">เริ่มใหม่</button></div>
 </section>
 </main>
-<section id="wall" hidden><div class="panel"><h2 style="margin-top:0">กำแพงการ์ดส่งกำลังใจให้ ALAN</h2><div class="wgrid" id="wallGrid"></div><p class="hint" id="wallEmpty" hidden>ยังไม่มีการ์ด เป็นคนแรกเลย!</p><button type="button" class="rs" id="wallMore" hidden>โหลดเพิ่ม</button></div></section>
+<section id="wall" hidden><div class="panel"><h2 style="margin-top:0">กำแพงการ์ดส่งกำลังใจให้ ALAN</h2><p class="hint" id="wallThanks" hidden style="color:var(--g);font-weight:700">ส่งการ์ดแล้ว! ขอบคุณที่ส่งกำลังใจให้ ALAN 💚 การ์ดของคุณอยู่ตำแหน่งแรกสุด</p><div class="wgrid" id="wallGrid"></div><p class="hint" id="wallEmpty" hidden>ยังไม่มีการ์ด เป็นคนแรกเลย!</p><button type="button" class="rs" id="wallMore" hidden>โหลดเพิ่ม</button></div></section>
 </div>
 <dialog id="lb"><img id="lbImg" alt="การ์ด"><button type="button" class="rs" style="margin-top:10px" onclick="document.getElementById('lb').close()">ปิด</button></dialog>
 <dialog id="dlg"><p style="margin:0 0 8px">กดค้างที่รูปเพื่อบันทึก (หรือคลิกขวา → บันทึกรูปภาพ)</p><img id="out" alt="การ์ดของคุณ"><button class="rs" style="margin-top:10px" onclick="dlg.close()">ปิด</button></dialog>
@@ -260,10 +260,10 @@ await up('full/'+id+'.jpg',full);await up('thumb/'+id+'.jpg',th);
 const r=await fetch(CFG.url+'/rest/v1/cards',{method:'POST',headers:{...HD,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({sender:(S.sig||'').slice(0,40),message:(S.msg||'').slice(0,200),drink:DRINKS[S.drink][0],img_path:'full/'+id+'.jpg',thumb_path:'thumb/'+id+'.jpg'})});
 if(!r.ok)throw new Error('insert '+r.status);
 try{localStorage.setItem('alanLast',String(Date.now()))}catch(e){}
-m.innerHTML='ส่งแล้ว! <a href="#wall">ไปดูที่กำแพง</a>';
+m.textContent='';justSent=true;$('wallGrid').innerHTML='';location.hash='#wall';window.scrollTo(0,0);
 }catch(e){EXPORT=false;draw();m.textContent='ส่งไม่สำเร็จ ลองใหม่อีกครั้งนะคะ ('+e.message+')'}
 b.disabled=false}
-let wallOff=0,wallBusy=false;const PAGE=24;
+let wallOff=0,wallBusy=false,justSent=false;const PAGE=24;
 async function loadWall(reset){
 if(wallBusy)return;wallBusy=true;const g=$('wallGrid');if(reset){g.innerHTML='';wallOff=0}
 try{const r=await fetch(CFG.url+'/rest/v1/cards?select=id,sender,thumb_path,img_path&order=created_at.desc&limit='+PAGE+'&offset='+wallOff,{headers:HD});if(!r.ok)throw new Error(r.status);const rows=await r.json();
@@ -271,7 +271,7 @@ rows.forEach(c=>{const a=document.createElement('button');a.type='button';a.clas
 wallOff+=rows.length;$('wallMore').hidden=rows.length<PAGE;$('wallEmpty').hidden=g.children.length>0}
 catch(e){$('wallEmpty').textContent='โหลดกำแพงไม่สำเร็จ ลองรีเฟรชนะคะ';$('wallEmpty').hidden=false}
 wallBusy=false}
-function route(){const w=location.hash==='#wall'&&WOK;$('wall').hidden=!w;document.querySelector('main.grid').hidden=w;$('hero').hidden=w;if(w&&!$('wallGrid').children.length)loadWall(true)}
+function route(){const w=location.hash==='#wall'&&WOK;$('wall').hidden=!w;$('wallThanks').hidden=!(w&&justSent);if(!w)justSent=false;document.querySelector('main.grid').hidden=w;$('hero').hidden=w;if(w&&!$('wallGrid').children.length)loadWall(true)}
 if(WOK){document.querySelectorAll('.nav,#wallBtn,#wallMsg').forEach(e=>e.hidden=false);$('wallBtn').onclick=sendWall;$('wallMore').onclick=()=>loadWall(false);addEventListener('hashchange',route);route()}
 </script>
 </body>
