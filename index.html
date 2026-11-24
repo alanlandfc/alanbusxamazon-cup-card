@@ -230,10 +230,7 @@ x.textAlign='center';x.fillStyle='#24352b';x.font='700 34px "Noto Sans Thai"';x.
 // signature
 x.textAlign='right';x.fillStyle='#00704a';x.font='34px "iannnnn-DOG"';x.fillText(S.sig?'จาก '+S.sig:'',W-70,1150);
 // stamp
-x.save();x.translate(135,275);x.rotate(-.25);x.strokeStyle='#8a6fc9';x.lineWidth=3;x.beginPath();x.arc(0,0,82,0,7);x.stroke();x.setLineDash([4,5]);x.beginPath();x.arc(0,0,46,0,7);x.stroke();x.setLineDash([]);
-{const T='ALAN AMAZON CAFE CUP CARD • ';x.fillStyle='#8a6fc9';x.font='700 15px "Noto Sans Thai"';x.textAlign='center';x.textBaseline='middle';for(let i=0;i<T.length;i++){x.save();x.rotate(i*2*Math.PI/T.length);x.fillText(T[i],0,-64);x.restore()}
-x.font='700 26px "Noto Sans Thai"';x.fillText('ALAN',0,-3);x.font='500 11px "Noto Sans Thai"';x.fillText('CUP CARD',0,17)}
-x.restore();x.textBaseline='alphabetic';
+x.save();x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle='#8a6fc9';x.font='600 22px "Noto Sans Thai"';x.fillText('ALAN BUS x AMAZON CAFE CUP CARD',72,200);x.restore();
 }
 $('dl').onclick=()=>{EXPORT=true;draw();const u=cv.toDataURL('image/png');EXPORT=false;draw();const a=document.createElement('a');a.href=u;a.download='alan-digital-cup-card.png';try{a.click()}catch(e){}$('out').src=u;if(!$('dlg').open)$('dlg').showModal()};
 sync();fixMsg();
